@@ -1,9 +1,46 @@
+import { useContext } from "react";
+import { Link } from "react-router-dom";
+import { AuthContext } from "../../../AuthProvider/AuthProvider";
+import Swal from "sweetalert2";
 
 
 const NavBar = () => {
+    const { user, logOut } = useContext(AuthContext);
+    const handleSignOut = () => {
+        logOut()
+            .then(result => {
+
+                Swal.fire({
+                    icon: "success",
+                    text: "LogOut successfully!",
+
+                });
+                console.log(result.user);
+            })
+            .catch()
+    }
     const Links = <>
-        <li><a>Item 1</a></li>
-        <li><a>Item 3</a></li>
+        <li className="text-xl"><Link to="/">Home</Link></li>
+        <li className="text-xl"><Link to="/menu">Our Menu</Link></li>
+        <li className="text-xl"><Link to="/ourShop">Our Shop</Link></li>
+        <li className="text-xl"><Link to="/login">LogIn</Link></li>
+        <li className="text-xl "><Link to="/register">Register</Link></li>
+        {
+            user ?
+                <>
+                    <div className="ml-[150px] tooltip tooltip-bottom mr-5" data-tip={user.displayName || user.email}  >
+                        <img className="rounded-full w-14" src={user.photoURL || "https://web.programming-hero.com/static/media/profileImage.934e5b10.png"} />
+                    </div>
+                    <Link to=""><button onClick={handleSignOut} className="btn  bg-green-600 text-xl font-medium ">SING OUT</button></Link>
+
+                </>
+                :
+                <>
+
+                </>
+
+        }
+
     </>
     return (
         <div className="navbar fixed z-10 bg-opacity-20 bg-base-100">
