@@ -4,9 +4,11 @@ import { AuthContext } from "../../AuthProvider/AuthProvider";
 import Swal from "sweetalert2";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Helmet } from "react-helmet-async";
+import useAxiosPublic from "../../Hoocks/useAxiosPublic";
 
 
 const Register = () => {
+    const axiosPublic = useAxiosPublic();
 
     const [showPassword, setShowPassword] = useState(false);
     const [registerError, setRegisterError] = useState("");
@@ -14,13 +16,13 @@ const Register = () => {
     const navigate = useNavigate();
 
     const { createUser, setUser, updateUserProfile } = useContext(AuthContext);
-    const handleRegister = e =>{
+    const handleRegister = e => {
         e.preventDefault();
         const email = e.target.email.value;
         const password = e.target.password.value;
         const name = e.target.name.value;
         const PhotoURL = e.target.PhotoURL.value;
-        
+
         console.log(email, password, name, PhotoURL);
 
         if (password.length < 6) {
@@ -28,18 +30,18 @@ const Register = () => {
             Swal.fire({
                 icon: "error",
                 text: "Password should be at least 6 characters!",
-                
-              });
+
+            });
             return;
         }
         else if (!/[A-Z]/.test(password)) {
             setRegisterError('Your password should have at least one upper case letter');
-            
+
             Swal.fire({
                 icon: "error",
                 text: "Your password should have at least one upper case letter!",
-                
-              });
+
+            });
             return;
         }
         else if (!/[a-z]/.test(password)) {
@@ -47,8 +49,8 @@ const Register = () => {
             Swal.fire({
                 icon: "error",
                 text: "Your password should have at least one lower case letter!",
-                
-              });
+
+            });
             return;
         }
         setRegisterError('');
@@ -59,12 +61,26 @@ const Register = () => {
                 console.log(result.user);
                 setUser(result.user);
                 setSuccess("Account Created successfully");
-                Swal.fire({
-                    icon: "success",
-                    text: "Account Created successfully!",
-                    
-                  });
-                
+                // create user entry--------------
+                const userInfo = {
+                    email,
+                    password,
+                    name,
+                    PhotoURL
+
+                }
+                axiosPublic.post('/users', userInfo)
+                    .then(res => {
+                        if (res.data.insertedId) {
+                            Swal.fire({
+                                icon: "success",
+                                text: "Account Created successfully!",
+
+                            });
+                        }
+                    })
+
+
                 updateUserProfile(name, PhotoURL)
                 // .then()
                 navigate("/");

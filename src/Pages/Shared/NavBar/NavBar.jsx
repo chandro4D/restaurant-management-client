@@ -3,9 +3,13 @@ import { Link } from "react-router-dom";
 import { AuthContext } from "../../../AuthProvider/AuthProvider";
 import Swal from "sweetalert2";
 
+import { FaCartPlus } from "react-icons/fa";
+import useCart from "../../../Hoocks/useAuth/useCart";
+
 
 const NavBar = () => {
     const { user, logOut } = useContext(AuthContext);
+    const [cart] = useCart();
     const handleSignOut = () => {
         logOut()
             .then(result => {
@@ -25,10 +29,16 @@ const NavBar = () => {
         <li className="text-xl"><Link to="/ourShop">Our Shop</Link></li>
         <li className="text-xl"><Link to="/login">LogIn</Link></li>
         <li className="text-xl "><Link to="/register">Register</Link></li>
+        <li className="text-xl align-top mr-[120px]"><Link to="/dashboard/cart">
+            <button className="btn">
+                <FaCartPlus></FaCartPlus>
+                <div className="badge badge-secondary">+{cart.length}</div>
+            </button>
+        </Link></li>
         {
             user ?
                 <>
-                    <div className="ml-[150px] tooltip tooltip-bottom mr-5" data-tip={user.displayName || user.email}  >
+                    <div className=" tooltip tooltip-bottom mr-5" data-tip={user.displayName || user.email}  >
                         <img className="rounded-full w-14" src={user.photoURL || "https://web.programming-hero.com/static/media/profileImage.934e5b10.png"} />
                     </div>
                     <Link to=""><button onClick={handleSignOut} className="btn  bg-green-600 text-xl font-medium ">SING OUT</button></Link>
@@ -53,7 +63,7 @@ const NavBar = () => {
                         {Links}
                     </ul>
                 </div>
-                <a className="btn btn-ghost text-xl">Restaurant Management</a>
+                <a className="btn btn-ghost text-xl  mb-2">Restaurant Management</a>
             </div>
             <div className="navbar-center hidden lg:flex">
                 <ul className="menu menu-horizontal px-1">

@@ -14,6 +14,7 @@ const PrivateRoute = ({ children }) => {
             <div className="flex items-center justify-center h-screen">
                 <span className="w-20 h-20 text-warning animate-spin text-4xl font-bold">Loading...</span>
             </div>
+
         );
     }
 
